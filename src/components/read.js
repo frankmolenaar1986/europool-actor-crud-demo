@@ -5,11 +5,31 @@ import axios from 'axios';
 
 export default function Read() {
     const [APIData, setAPIData] = useState([]);
-    useEffect(() => {
+
+    const getData = () => {
         axios.get(`https://63e279db109336b6cb08b04f.mockapi.io/europool-actors`)
-            .then((response) => {
-                setAPIData(response.data);
-            })
+            .then((getData) => {
+                 setAPIData(getData.data);
+             })
+    }
+
+    const setData = (data) => {
+        let { id, firstName, lastName, checkbox } = data;
+        localStorage.setItem('ID', id);
+        localStorage.setItem('First Name', firstName);
+        localStorage.setItem('Last Name', lastName);
+        localStorage.setItem('Checkbox Value', checkbox)
+    }
+
+    const onDelete = (id) => {
+        axios.delete(`https://63e279db109336b6cb08b04f.mockapi.io/europool-actors/${id}`)
+        .then(() => {
+            getData();
+        })
+    }
+
+    useEffect(() => {
+        getData();
     }, [])
 
     return (
@@ -21,6 +41,7 @@ export default function Read() {
                         <Table.HeaderCell>Last Name</Table.HeaderCell>
                         <Table.HeaderCell>Checked</Table.HeaderCell>
                         <Table.HeaderCell>Update</Table.HeaderCell>
+                        <Table.HeaderCell>Delete</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -31,15 +52,22 @@ export default function Read() {
                             <Table.Cell>{data.firstName}</Table.Cell>
                             <Table.Cell>{data.lastName}</Table.Cell>
                             <Table.Cell>{data.checkbox ? 'Checked' : 'Unchecked'}</Table.Cell>
-                            <Link to='/update'>
-                                <Table.Cell> 
-                                    <Button>Update</Button>
-                                </Table.Cell>
-                            </Link>
-                            </Table.Row>
+                            <Table.Cell> 
+                                <Link to='/update'>
+                                    <Button onClick={() => setData(data)}>Update</Button>
+                                </Link>
+                            </Table.Cell>  
+                            <Table.Cell>
+                                <Button onClick={() => onDelete(data.id)}>Delete</Button>
+                            </Table.Cell> 
+                        </Table.Row>
                     )})}
                 </Table.Body>
             </Table>
+
+            <Link to="/create">
+                <Button className="right floated">Create Actor</Button>
+            </Link>                    
                 
         </div>
     )

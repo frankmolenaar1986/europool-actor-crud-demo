@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Form } from 'semantic-ui-react'
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
 export default function Create() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [checkbox, setCheckbox] = useState(false);
-    const navigate = useNavigate();
+    const navigate = useHistory();
+
     const usePostData = () => {
         axios.post(`https://63e279db109336b6cb08b04f.mockapi.io/europool-actors`, {
             firstName,
             lastName,
             checkbox
-        }).then(() => { navigate('/read') });     
+        }).then(() => { navigate.push('/read') });     
     }
     return (
         <div>
